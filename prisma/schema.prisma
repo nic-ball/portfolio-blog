@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// DATA DICTIONARY
+
+// Model: post
+// Purpose: Stores individual blog articles
+model Post {
+  id        String   @id @default(cuid()) // Unique ID
+  title     String   
+  slug      String   @unique           // The URL path (e.g 'my-first-post)
+  content   String  
+  published Boolean  @default(false)  // Draft vs Live status
+  createdAt DateTime @default(now()) // Auto-set on creation
+  updatedAt DateTime @updatedAt     // Auto-updated when modified
+}
