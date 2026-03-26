@@ -13,7 +13,7 @@ async function main() {
         create: {
             title: 'My First TDD Blog Post',
             slug: 'my-first-post',
-            content: 'This is the full content of my very first blog post. I built this usng Next.js, Prisma and Test Driven Development!',
+            content: 'This is the full content of my very first blog post. I built this using Next.js, Prisma and Test Driven Development!',
             published: true,
         },
     })
