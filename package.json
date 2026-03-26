@@ -1,6 +1,7 @@
 {
   "name": "portfolio-blog",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,7 +11,7 @@
     "test": "jest --watch"
   },
   "dependencies": {
-    "@prisma/client": "^7.5.0",
+    "@prisma/client": "^6.19.02",
     "next": "16.2.1",
     "react": "19.2.4",
     "react-dom": "19.2.4"
@@ -28,8 +29,12 @@
     "eslint-config-next": "16.2.1",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
-    "prisma": "^7.5.0",
+    "prisma": "^6.19.2",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }

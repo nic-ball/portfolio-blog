@@ -1,28 +1,34 @@
 import { render, screen, cleanup } from '@testing-library/react'
 import Page from './page'
 
+
+// Mock the database
+// Intercept calls to Prisma so tests don't hit the real database
+jest.mock('../lib/prisma', () => ({
+    prisma: {
+        post: {
+            findMany: jest.fn().mockResolvedValue([
+                { id: '1', title: 'Dynamic Post 1', content: 'Testing...', published: true },
+                { id: '2', title: 'Dynamic Post 2', content: 'Testing...', published: true },
+            ]),
+        },
+    },
+}))
+
 // Ensure DOM is wiped clean after each test
 afterEach(() => {
     cleanup()
 })
 
 describe('Blog Homepage', () => {
-    it('renders the main heading', () => {
-        render(<Page />)
-        const heading = screen.getByRole('heading', { level: 1, name: /Nic's Work in Progress Blog/i })
-        expect(heading).toBeInTheDocument()
-    })
+    it('renders dynamic posts from the database', async () => {
+        const ResolvedPage = await Page()
+        render(ResolvedPage)
 
-    it('renders exactly two blog posts', () => {
-        render(<Page />)
-        // getAllByRole returns an array of matching DOM elements
-        const articles = screen.getAllByRole('article')
+        const title1 = screen.getByRole('heading', { level: 2, name: 'Dynamic Post 1' })
+        const title2 = screen.getByRole('heading', { level: 2, name: 'Dynamic Post 2' })
 
-        // Log the actual HTML if it fails again so we can see the ghost!
-        if (articles.length !== 2) {
-            screen.debug()
-        }
-
-        expect(articles).toHaveLength(2)
+        expect(title1).toBeInTheDocument()
+        expect(title2).toBeInTheDocument()
     })
 })
