@@ -1,7 +1,15 @@
 import { prisma } from '../../lib/prisma'
 import Link from 'next/link'
+import { auth } from '../../auth'
+import { redirect } from 'next/navigation'
 
 export default async function AdminDashboard() {
+
+  const session = await auth()
+  if (!session) {
+    redirect('/api/auth/signin') // Kick to login page
+  }
+
   const posts = await prisma.post.findMany({
     orderBy: { createdAt: 'desc' },
   })
