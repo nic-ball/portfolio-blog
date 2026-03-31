@@ -4,10 +4,10 @@ import Page from './page'
 
 // Mock the database
 // Intercept calls to Prisma so tests don't hit the real database
-jest.mock('../lib/prisma', () => ({
+vi.mock('../lib/prisma', () => ({
     prisma: {
         post: {
-            findMany: jest.fn().mockResolvedValue([
+            findMany: vi.fn().mockResolvedValue([
                 { id: '1', title: 'Dynamic Post 1', content: 'Testing...', published: true },
                 { id: '2', title: 'Dynamic Post 2', content: 'Testing...', published: true },
             ]),

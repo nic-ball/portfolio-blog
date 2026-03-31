@@ -3,8 +3,13 @@ import { redirect } from 'next/navigation'
 import AdminDashboard from './page'
 
 // Mock next/navigation
-jest.mock('next/navigation', () => ({
-  redirect: jest.fn(),
+vi.mock('next/navigation', () => ({
+  redirect: vi.fn(),
+}))
+
+// Mock auth
+vi.mock('../../auth', () => ({
+  auth: vi.fn().mockResolvedValue(null),
 }))
 
 describe('Admin Security', () => {

@@ -2,10 +2,10 @@ import { render, screen, cleanup } from '@testing-library/react'
 import AdminDashboard from './page'
 
 // Mock db (Admin requires to see all posts, even unpublished drafts)
-jest.mock('../../lib/prisma', () => ({
+vi.mock('../../lib/prisma', () => ({
   prisma: {
     post: {
-      findMany: jest.fn().mockResolvedValue([
+      findMany: vi.fn().mockResolvedValue([
         { id: '1', title: 'Published Post', published: true },
         { id: '2', title: 'Secret Draft', published: false },
       ]),
@@ -13,9 +13,17 @@ jest.mock('../../lib/prisma', () => ({
   },
 }))
 
+vi.mock('../../auth', () => ({
+  auth: vi.fn().mockResolvedValue({ user: { name: 'Admin', email: 'admin@test.com' } }),
+}))
+
+vi.mock('next/navigation', () => ({
+  redirect: vi.fn(),
+}))
+
 afterEach(() => {
   cleanup()
-  jest.clearAllMocks()
+  vi.clearAllMocks()
 })
 
 describe('Admin Dashboard', () => {

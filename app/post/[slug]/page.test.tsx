@@ -2,11 +2,11 @@ import { render, screen, cleanup } from '@testing-library/react'
 import PostPage from './page'
 
 // Mock the database
-jest.mock('../../../lib/prisma', () => ({
+vi.mock('../../../lib/prisma', () => ({
   prisma: {
     post: {
       // Mock findUnique instead of findMany
-      findUnique: jest.fn().mockResolvedValue({
+      findUnique: vi.fn().mockResolvedValue({
         id: '1',
         title: 'A Dynamic Post',
         content: 'This is the full content of the article',
@@ -19,7 +19,7 @@ jest.mock('../../../lib/prisma', () => ({
 
 afterEach(() => {
   cleanup()
-  jest.clearAllMocks()
+  vi.clearAllMocks()
 })
 
 describe('Single Blog Post Page', () => {
