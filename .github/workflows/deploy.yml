@@ -40,7 +40,7 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}:latest
           build-args: |
-            DATABASE_URL=file:./dev.db
+            DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@master

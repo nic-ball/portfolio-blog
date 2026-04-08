@@ -11,6 +11,9 @@ RUN npx prisma generate
 
 COPY . .
 
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
 RUN npm run build
 
 # Production Runner
