@@ -36,6 +36,8 @@ export async function createPost(formData: FormData) {
     revalidatePath('/')
     revalidatePath('/admin')
 
+    console.log(`Successfully created post: ${newPost.id}`)
+
     // For tests return the result
     if (process.env.NODE_ENV === 'test') {
       return { success: true, postId: newPost.id }
