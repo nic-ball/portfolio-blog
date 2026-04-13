@@ -32,6 +32,6 @@ describe('Admin Security', () => {
     // this is a placeholder for the logic
     await AdminDashboard()
 
-    expect(redirect).toHaveBeenCalledWith('/api/auth/signin')
+    expect(redirect).toHaveBeenCalledWith('/login')
   })
 })
