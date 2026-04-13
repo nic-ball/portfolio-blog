@@ -1,14 +1,16 @@
-export const dynamic = 'force-dynamic';
 import { prisma } from '../../lib/prisma'
 import Link from 'next/link'
 import { auth } from '../../auth'
 import { redirect } from 'next/navigation'
+import { signOut } from 'next-auth/react';
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
 
   const session = await auth()
   if (!session) {
-    redirect('/api/auth/signin') // Kick to login page
+    redirect('/login') // Kick to login page
   }
 
   const posts = await prisma.post.findMany({
@@ -18,15 +20,31 @@ export default async function AdminDashboard() {
   return (
     <main className="min-h-screen p-10 bg-gray-50 text-gray-900">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-extrabold mb-8 border-b pb-4">
-          Admin Dashboard
-        </h1>
+        <div className="flex justify-between items-center mb-8 border-b pb-4">
+          <h1 className="text-4xl font-extrabold mb-8 border-b pb-4">
+            Admin Dashboard
+          </h1>
+          <div className="flex gap-4">
+            <Link href="/admin/new">
+              <button className="mb-8 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                Create New Post
+              </button>
+            </Link>
 
-        <Link href="/admin/new">
-          <button className="mb-8 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-            Create New Post
-          </button>
-        </Link>
+            {/* Sign Out */}
+            <form action={async () => {
+              "use server"
+              await signOut({ redirectTo: "/" })
+            }}>
+              <button
+                type="submit"
+                className="bg-gray-200 hover:bg-red-500 hover:text-white text-gray-700 px-4 py-2 rounded-md font-bold transition"
+              >
+                Sign Out
+              </button>
+            </form>
+          </div>
+        </div>
 
         <div className="space-y-4">
           {posts.length === 0 ? (
