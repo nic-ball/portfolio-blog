@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { auth } from '../../../auth'
 
 export async function createPost(formData: FormData) {
+  console.log("TEST: The form action was triggered!");
   // Security: Check if user is logged in before saving
   const session = await auth()
   if (!session) {

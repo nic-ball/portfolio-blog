@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { prisma } from "../../../lib/prisma"
 import { notFound } from "next/navigation"
+import { getPostStatistics } from "../../../utils/postStats";
 
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
 
@@ -16,6 +17,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   if (!post || !post.published) {
     notFound()
   }
+
+  const stats = getPostStatistics(post.content)
+
   return (
     <main className="min-h-screen p-10 bg-gray-50 text-gray-900">
       <div className="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-sm border border-gray-100">
