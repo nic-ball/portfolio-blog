@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { auth } from '../../auth'
 import { redirect } from 'next/navigation'
 import { signOut } from 'next-auth/react';
+import SignOutButton from '../components/SignOutButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,17 +33,7 @@ export default async function AdminDashboard() {
             </Link>
 
             {/* Sign Out */}
-            <form action={async () => {
-              "use server"
-              await signOut({ redirectTo: "/" })
-            }}>
-              <button
-                type="submit"
-                className="bg-gray-200 hover:bg-red-500 hover:text-white text-gray-700 px-4 py-2 rounded-md font-bold transition"
-              >
-                Sign Out
-              </button>
-            </form>
+            <SignOutButton />
           </div>
         </div>
 
