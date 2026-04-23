@@ -1,54 +1,37 @@
 "use server"
 
 import { prisma } from '../../../lib/prisma'
-import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { auth } from '../../../auth'
 
 export async function createPost(formData: FormData) {
-  console.log("TEST: The form action was triggered!");
-  // Security: Check if user is logged in before saving
+  // 1. Check Auth (Return error instead of throwing)
   const session = await auth()
-  if (!session) {
-    throw new Error("Unauthorized")
-  }
+  if (!session) return { success: false, error: "Unauthorized: Please log in again." }
 
-  // Extract data from form
   const title = formData.get('title') as string
   const slug = formData.get('slug') as string
   const content = formData.get('content') as string
 
-  // Validation
   if (!title || !slug || !content) {
-    return { success: false, error: "All fields are required" }
+    return { success: false, error: "All fields are required." }
   }
 
   try {
-    // Create the post in the database
-    const newPost = await prisma.post.create({
-      data: {
-        title,
-        slug,
-        content,
-        published: true, // default to published until I create the publish unpublish functionality
-      },
+    // 2. Save to database
+    await prisma.post.create({
+      data: { title, slug, content, published: true },
     })
-    // Clear next.js cache
+
+    // 3. Clear cache
     revalidatePath('/')
     revalidatePath('/admin')
 
-    console.log(`Successfully created post: ${newPost.id}`)
-
-    // For tests return the result
-    if (process.env.NODE_ENV === 'test') {
-      return { success: true, postId: newPost.id }
-    }
+    // 4. Return success instead of redirecting!
+    return { success: true }
 
   } catch (error) {
-    console.error("Failed to create post:", error)
-    return { success: false, error: "Database error. Slug might not be unique" }
+    console.error("Database error:", error)
+    return { success: false, error: "Database error. That slug might already exist!" }
   }
-  // Redirect to Admin
-  redirect('/admin')
-
 }
