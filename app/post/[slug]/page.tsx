@@ -43,7 +43,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
           {/* Display the calculated Math Stats here! */}
           <div className="flex flex-wrap gap-4 text-gray-500 text-sm mb-8 border-b pb-4">
-            <p>📅 {post.createdAt.toLocaleDateString()}</p>
+            <p>📅 {post.createdAt.toLocaleDateString('en-GB', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric'
+            })}</p>
             {stats && (
               <>
                 <p>⏱️ {stats.readingTime} min read ({stats.wordCount} words)</p>
