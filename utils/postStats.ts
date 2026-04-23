@@ -1,5 +1,5 @@
 // User made function for displaying stats about blog posts
-export function getPostStatistics(content: string) {
+export function getPostStatistics(content: string, allPosts: any[]) {
   // Length
   const words = content.split(" ");
   const wordCount = words.length;
@@ -11,8 +11,17 @@ export function getPostStatistics(content: string) {
   // Complexity score
   const complexity = Math.trunc(wordCount / 100);
 
-  // Random article ID for fun
-  const randomID = Math.floor(Math.random() * 1000);
+  // Random article to read next
+  let recommendedPost = null;
+  if (allPosts && allPosts.length > 0) {
+    const randomIndex = Math.floor(Math.random() * allPosts.length);
+    recommendedPost = allPosts[randomIndex];
+  }
 
-  return { wordCount, roundedMinutes, complexity, randomID };
+  return {
+    wordCount,
+    readingTime: roundedMinutes < 1 ? 1 : roundedMinutes, // Min 1 min read
+    complexity,
+    recommendedPost
+  };
 }
