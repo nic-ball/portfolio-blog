@@ -1,18 +1,22 @@
 import { render, screen, cleanup } from '@testing-library/react'
 import PostPage from './page'
 
-// Mock the database
+// 1. MOCK THE DATABASE
 vi.mock('../../../lib/prisma', () => ({
   prisma: {
     post: {
-      // Mock findUnique instead of findMany
+      // Mock the main article
       findUnique: vi.fn().mockResolvedValue({
         id: '1',
-        title: 'A Dynamic Post',
-        content: 'This is the full content of the article',
+        title: 'My Awesome Dynamic Post',
+        content: 'This is the full content of the article. It has some words.',
         published: true,
         createdAt: new Date('2026-03-26T12:00:00Z'),
       }),
+      // THE FIX: Mock the "Read Next" articles so it doesn't crash!
+      findMany: vi.fn().mockResolvedValue([
+        { id: '2', title: 'Random Recommended Post', slug: 'random-post', published: true }
+      ]),
     },
   },
 }))
@@ -23,14 +27,22 @@ afterEach(() => {
 })
 
 describe('Single Blog Post Page', () => {
-  it('render the specific blog post title and content', async () => {
-    const ResolvedPage = await PostPage({ params: Promise.resolve({ slug: 'A dynamic Post' }) })
+  it('renders the post title, content, and AC4.3 stats', async () => {
+    // 2. RENDER THE ASYNC PAGE
+    const ResolvedPage = await PostPage({ params: Promise.resolve({ slug: 'my-awesome-dynamic-post' }) })
     render(ResolvedPage)
 
-    const title = screen.getByRole('heading', { level: 1, name: 'A Dynamic Post' })
-    const content = screen.getByText('This is the full content of the article')
-
+    // 3. ASSERTIONS
+    const title = screen.getByRole('heading', { level: 1, name: 'My Awesome Dynamic Post' })
     expect(title).toBeInTheDocument()
-    expect(content).toBeInTheDocument()
+
+    expect(screen.getByText(/This is the full content/i)).toBeInTheDocument()
+
+    // 4. Verify the Math Stats are rendering!
+    expect(screen.getByText(/min read/i)).toBeInTheDocument()
+    expect(screen.getByText(/Complexity Score:/i)).toBeInTheDocument()
+
+    // Verify the random recommendation is rendering
+    expect(screen.getByText('Random Recommended Post')).toBeInTheDocument()
   })
 })
