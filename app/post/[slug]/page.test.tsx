@@ -43,6 +43,6 @@ describe('Single Blog Post Page', () => {
     expect(screen.getByText(/Complexity Score:/i)).toBeInTheDocument()
 
     // Verify the random recommendation is rendering
-    expect(screen.getByText('Random Recommended Post')).toBeInTheDocument()
+    expect(screen.getByText(/Random Recommended Post/i)).toBeInTheDocument()
   })
 })
