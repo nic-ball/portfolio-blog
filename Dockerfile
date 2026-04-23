@@ -35,6 +35,10 @@ COPY --from=builder /app/public ./public
 
 COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
 
+# Force next.js standalone server to listen on all network interfaces
+ENV HOSTNAME="0.0.0.0"
+ENV PORT=3000
+
 EXPOSE 3000
 
 CMD ["node", "server.js"]
